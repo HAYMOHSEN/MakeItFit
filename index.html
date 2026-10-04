@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Make It Fit</title>
+<meta name="description" content="Shrink photos and PDFs to any size limit — offline, private, and still good quality.">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1A1D22" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+<link rel="modulepreload" href="app.js">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24"><path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M4 19h16"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+</svg>
+
+<header class="appbar">
+  <div class="brand"><img src="icons/icon-192.png" alt="" width="26" height="26">Make It Fit</div>
+  <div class="spacer"></div>
+  <span class="pill" title="Everything happens on this PC. Nothing is uploaded."><svg class="i"><use href="#i-shield"/></svg>Private, works offline</span>
+  <button class="btn icon" id="btnHelp" aria-label="Help" title="Help"><svg class="i"><use href="#i-help"/></svg></button>
+  <button class="btn icon" id="btnSettings" aria-label="Settings" title="Settings"><svg class="i"><use href="#i-gear"/></svg></button>
+</header>
+
+<main class="layout">
+  <section class="files" aria-label="Your files">
+    <div class="dropzone" id="dropzone">
+      <svg class="sizer" viewBox="0 0 180 136" aria-hidden="true">
+        <path d="M24 46v76h132V46" fill="none" stroke="var(--yellow)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        <g class="doc">
+          <path d="M66 10h34l16 16v64H66z" fill="var(--surface)" stroke="var(--line-strong)" stroke-width="2"/>
+          <path d="M100 10v16h16" fill="none" stroke="var(--line-strong)" stroke-width="2"/>
+          <rect x="75" y="40" width="32" height="4" rx="2" fill="var(--ghost)"/>
+          <rect x="75" y="50" width="32" height="4" rx="2" fill="var(--ghost)"/>
+          <rect x="75" y="60" width="20" height="4" rx="2" fill="var(--ghost)"/>
+          <rect x="75" y="74" width="32" height="5" rx="2.5" fill="var(--jade)"/>
+        </g>
+      </svg>
+      <h1>Drop a photo or PDF to make it fit</h1>
+      <p>Type the size limit a website, form or email demands, and get the best-quality file that still fits. PDF, JPG, PNG, WebP, GIF, BMP and AVIF.</p>
+      <div class="buttons">
+        <button class="btn primary" id="btnChoose"><svg class="i"><use href="#i-plus"/></svg>Choose files</button>
+      </div>
+      <p class="hint">Or paste an image with Ctrl+V. Your files stay on this PC.</p>
+    </div>
+
+    <div id="fileList" hidden>
+      <div class="list-head">
+        <h2>Files <span class="count" id="fileCount"></span></h2>
+        <div class="spacer"></div>
+        <button class="btn" id="btnAddMore"><svg class="i"><use href="#i-plus"/></svg>Add files</button>
+        <button class="btn quiet" id="btnClear">Clear all</button>
+      </div>
+      <ul class="rows" id="rows"></ul>
+      <div class="summary" id="summary" hidden>
+        <span id="summaryText"></span>
+        <div class="spacer"></div>
+        <button class="btn" id="btnSaveAll"><svg class="i"><use href="#i-save"/></svg>Save all</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="limit-panel" aria-label="Size limit and options">
+    <div>
+      <h2>Size limit</h2>
+      <p class="sub">Each file will be made smaller than this.</p>
+    </div>
+    <div class="chips" role="radiogroup" aria-label="Size limit presets" id="chips"></div>
+    <div class="custom">
+      <label for="limitValue">Custom</label>
+      <input type="number" id="limitValue" min="1" step="any" inputmode="decimal" aria-label="Custom limit value">
+      <select id="limitUnit" aria-label="Unit"><option value="1000">KB</option><option value="1000000">MB</option></select>
+    </div>
+    <p class="limit-text" id="limitText"></p>
+    <div class="panel-sep"></div>
+
+    <details class="opts" id="photoOpts">
+      <summary>Photo options</summary>
+      <div class="opt-body">
+        <label class="field"><span>Save photos as</span>
+          <select data-setting="photoFormat">
+            <option value="auto">Auto (JPG; keeps transparency as PNG)</option>
+            <option value="image/jpeg">JPG — accepted everywhere</option>
+            <option value="image/png">PNG — lossless, larger</option>
+            <option value="image/webp">WebP — smallest, not accepted everywhere</option>
+          </select>
+        </label>
+        <label class="field"><span>Resize</span>
+          <select data-setting="resizeMode">
+            <option value="none">Only if needed to fit</option>
+            <option value="max">Limit width and height</option>
+            <option value="exact">Exact size (for photo rules)</option>
+          </select>
+        </label>
+        <div class="field-row" id="resizeFields" hidden>
+          <input type="number" data-setting="resizeW" min="16" max="12000" placeholder="Width" aria-label="Width in pixels"> ×
+          <input type="number" data-setting="resizeH" min="16" max="12000" placeholder="Height" aria-label="Height in pixels"> px
+        </div>
+        <label class="field" id="fitField" hidden><span>Exact size: how to fit the photo</span>
+          <select data-setting="resizeFit">
+            <option value="crop">Crop the edges (fill)</option>
+            <option value="pad">Keep everything, add white borders</option>
+          </select>
+        </label>
+        <p class="hint" style="margin:0">Hidden location and camera details are always removed.</p>
+      </div>
+    </details>
+
+    <details class="opts" id="pdfOpts">
+      <summary>PDF options</summary>
+      <div class="opt-body">
+        <label class="check"><input type="checkbox" data-setting="pdfScanFallback"><span>If needed, turn pages into images to reach the limit<small>Used only when shrinking the pictures inside isn't enough. Text in those pages can no longer be selected.</small></span></label>
+        <label class="check"><input type="checkbox" data-setting="pdfPrivacy"><span>Remove hidden document info<small>Author, software and editing history. PDF/A files are left untouched.</small></span></label>
+      </div>
+    </details>
+
+    <details class="opts" id="combineOpts">
+      <summary>Combine photos into one PDF</summary>
+      <div class="opt-body">
+        <label class="check"><input type="checkbox" data-setting="combine"><span>Put all photos into a single PDF under the limit<small>Use the arrows on each photo to set the page order.</small></span></label>
+        <label class="field"><span>Page size</span>
+          <select data-setting="pageSize">
+            <option value="auto">Auto (A4 or Letter for your region)</option>
+            <option value="a4">A4</option>
+            <option value="letter">US Letter</option>
+            <option value="photo">Same shape as the photo</option>
+          </select>
+        </label>
+        <label class="field"><span>Margins</span>
+          <select data-setting="margin">
+            <option value="small">Small</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+      </div>
+    </details>
+
+    <label class="check"><input type="checkbox" data-setting="strong"><span>Allow lower quality for very small limits<small>Goes below the normal readability floor. Check the result before using it.</small></span></label>
+
+    <div class="run-box">
+      <button class="btn primary big" id="btnRun" disabled>Make it fit</button>
+      <p class="run-hint" id="runHint">Add files to start.</p>
+    </div>
+  </aside>
+</main>
+
+<footer class="statusbar">
+  <span>Your files never leave this PC.</span>
+  <div class="spacer"></div>
+  <a href="privacy.html" target="_blank" rel="noopener">Privacy</a>
+  <span id="versionLabel"></span>
+</footer>
+
+<div class="drop-overlay" id="dropOverlay" hidden>Drop to add</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.bmp,.avif,application/pdf,image/*" hidden>
+
+<dialog id="dlgPreview" class="wide">
+  <div class="dlg-head"><h2 id="previewTitle">Preview</h2><div class="tabs" id="previewTabs" hidden><button class="tab" data-tab="result" aria-selected="true">Result</button><button class="tab" data-tab="original" aria-selected="false">Original</button></div><button class="btn icon" data-close aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+  <div class="dlg-body"><div class="preview-stats" id="previewStats"></div><div id="previewBody"></div></div>
+  <div class="dlg-foot"><button class="btn" id="previewOpen" hidden>Open full PDF</button><div class="spacer"></div><button class="btn" data-close>Close</button><button class="btn primary" id="previewSave"><svg class="i"><use href="#i-save"/></svg>Save</button></div>
+</dialog>
+
+<dialog id="dlgPassword">
+  <div class="dlg-head"><h2>This PDF needs a password</h2><button class="btn icon" data-close aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+  <form method="dialog" id="passwordForm">
+    <div class="dlg-body field-stack">
+      <p id="passwordName" class="hint"></p>
+      <label class="field"><span>Password</span><input type="password" id="passwordInput" autocomplete="off" required></label>
+      <p class="error-text" id="passwordError" hidden></p>
+      <p class="hint" style="margin:0">The password is used only to open the file on this PC and is never saved.</p>
+    </div>
+    <div class="dlg-foot"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit" id="passwordSubmit">Open PDF</button></div>
+  </form>
+</dialog>
+
+<dialog id="dlgConfirm">
+  <div class="dlg-head"><h2 id="confirmTitle"></h2></div>
+  <div class="dlg-body" id="confirmBody"></div>
+  <div class="dlg-foot" id="confirmFoot"></div>
+</dialog>
+
+<dialog id="dlgSettings">
+  <div class="dlg-head"><h2>Settings</h2><button class="btn icon" data-close aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+  <div class="dlg-body field-stack">
+    <label class="field"><span>Theme</span>
+      <select data-setting="theme"><option value="system">Follow Windows</option><option value="light">Light</option><option value="dark">Dark</option></select>
+    </label>
+    <label class="field"><span>Name of saved files</span>
+      <select data-setting="suffixStyle"><option value="limit">photo_under-2MB.jpg</option><option value="small">photo_small.jpg</option><option value="same">photo.jpg (same name)</option></select>
+    </label>
+    <p class="hint">Make It Fit counts 1 KB as 1,000 bytes, so a file that fits here also passes websites that count 1,024.</p>
+    <button class="btn" type="button" id="btnResetSettings">Reset all settings</button>
+  </div>
+  <div class="dlg-foot"><button class="btn primary" data-close>Done</button></div>
+</dialog>
+
+<dialog id="dlgHelp">
+  <div class="dlg-head"><h2>Help</h2><button class="btn icon" data-close aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+  <div class="dlg-body faq">
+    <h3>How does it work?</h3>
+    <p>Add files, type the limit you need, and press <b>Make it fit</b>. The app tries quality levels until each file is just under the limit, then shows you the result before you save it.</p>
+    <h3>Are my files uploaded anywhere?</h3>
+    <p>No. Everything happens on this PC. The app also works with no internet connection.</p>
+    <h3>Why couldn't it reach my limit?</h3>
+    <p>Some files can't get that small and stay readable. You can allow lower quality (in the side panel), choose a larger limit, or remove pages you don't need before shrinking a PDF.</p>
+    <h3>Text in my PDF became a picture</h3>
+    <p>When shrinking the pictures inside a PDF isn't enough, the app can turn whole pages into images, like a scan. The result tells you when this happened. Turn it off under PDF options if you need selectable text.</p>
+    <h3>Signed PDFs</h3>
+    <p>Shrinking a digitally signed PDF makes the signature invalid, so the app asks before it changes one. If the signature matters, ask the sender for a smaller signed copy.</p>
+    <h3>Protected PDFs</h3>
+    <p>If a protected PDF allows printing, the app makes a print-style copy with pages as images. If the owner blocked printing and changes, it can't be shrunk.</p>
+    <h3>iPhone HEIC photos</h3>
+    <p>Not supported yet. On the iPhone, open Settings › Photos and set “Transfer to Mac or PC” to Automatic, then copy the photo again to get a JPG. For future photos: Settings › Camera › Formats › Most Compatible.</p>
+    <h3>Word or PowerPoint files</h3>
+    <p>Save them as a PDF first (File › Save As › PDF), then add the PDF here.</p>
+    <h3>KB and MB</h3>
+    <p>Make It Fit counts 1 KB as 1,000 bytes and 1 MB as 1,000,000 bytes. A file that fits here also passes websites that count 1,024.</p>
+    <h3>Support</h3>
+    <p>Email <a href="mailto:haymohsen@gmail.com">haymohsen@gmail.com</a>. Describe what you tried and what happened; a screenshot of the file list helps.</p>
+  </div>
+  <div class="dlg-foot"><button class="btn primary" data-close>Close</button></div>
+</dialog>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
