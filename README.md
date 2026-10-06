@@ -1,44 +1,21 @@
-# Make It Fit
+# Make It Fit — fix for the shared app identity
 
-Shrink photos and PDFs to any size limit — offline, private, and still good quality.
-This folder is the complete app. It is a web app that installs like a normal Windows app
-through the Microsoft Store (GitHub Pages + PWABuilder, the same route as Rfoof).
+Repository: **HAYMOHSEN/MakeItFit** — app URL: https://haymohsen.github.io/MakeItFit/
 
-## Publish in 6 steps
+## What changed (nothing else in the repository changes)
 
-1. **GitHub:** create a new public repository named `MakeItFit` under your account and upload
-   everything in this folder (keep the folders `engine`, `js`, `lib`, `icons`, `screenshots`).
-2. **Pages:** Settings → Pages → Source: *Deploy from a branch*, Branch: `main`, folder `/ (root)`.
-   After 1–2 minutes open `https://haymohsen.github.io/MakeItFit/` (the name is case-sensitive).
-3. **Test in Edge:** open the address, press the install icon in the address bar, then turn off
-   Wi-Fi and open the app again — it must still work. Drop a PDF and a photo and shrink them.
-4. **Partner Center:** reserve the name (try "Make It Fit"; alternatives are listed in the feature
-   doc). On *Product identity* copy the Package/Identity/Name, Publisher and Publisher display name.
-5. **PWABuilder:** go to pwabuilder.com, enter the Pages address, *Package for stores* → Windows,
-   paste the three identity values, download the package, and upload the `.msixbundle` in your
-   Partner Center submission.
-6. **Listing:** use the text in the feature doc, the screenshots in `screenshots/`, the privacy
-   policy address `https://haymohsen.github.io/MakeItFit/privacy.html` and support email
-   `haymohsen@gmail.com`. Category: Utilities & tools. Set the one-time price and submit.
+- `manifest.webmanifest`: `"id": "./"` → `"id": "/MakeItFit/"`
+  (identity was `https://haymohsen.github.io/`, shared with your other apps; it is now `https://haymohsen.github.io/MakeItFit/`)
+- `sw.js`: `const VERSION = 'makeitfit-1.0.0';` → `const VERSION = 'makeitfit-1.2.0';`
+- `sw.js`: `keys.filter((k) => k !== VERSION)` → `keys.filter((k) => k.startsWith('makeitfit-') && k !== VERSION)`
+- The activate handler now deletes only Make It Fit's own old caches (names starting with "makeitfit-") instead of every cache on the site, so it no longer wipes the offline copies of your other apps.
 
-## Updating the app later
+The cache-version bump makes Edge fetch the new manifest instead of the copy it cached; users see no difference apart from a quick re-download of the app files on their next launch.
 
-Change the files on GitHub and change `VERSION` in `app.js` and in `sw.js` (first line of the
-`VERSION` constant). Installed copies pick up the new files the next time they start; no new
-Store submission is needed unless the icons or name change.
+## Steps
 
-## Folder map
-
-- `index.html`, `styles.css`, `app.js` — the screens.
-- `engine/` — the processing engine (runs in a background thread): `image-engine.js` (photos),
-  `pdf-engine.js` (PDF smart shrinking), `worker.js` (job router, combine photos into a PDF).
-- `js/pdf-tools.js` — previews, protected-PDF checks and "scan mode" (pages → images).
-- `js/zip.js` — ZIP writer used by "Save all" when a folder can't be chosen.
-- `lib/` — open-source libraries: pdf-lib (MIT) and pdf.js (Apache 2.0) with their licenses.
-- `sw.js` — offline support. `manifest.webmanifest` — app identity, icons, "Open with" file types.
-- `privacy.html` — privacy policy. `icons/` — app icons. `screenshots/` — Store screenshots.
-
-## Licenses
-
-pdf-lib: MIT (lib/pdf-lib.LICENSE.md). pdf.js: Apache License 2.0 (lib/pdfjs/LICENSE, plus the
-licenses in lib/pdfjs/wasm for the JPEG 2000 and JBIG2 decoders). Both allow use in a paid app.
+1. On GitHub open the repository → **Add file → Upload files** → drop the file(s) from this folder (they overwrite the old ones with the same names) → **Commit changes**. You can instead open each file, click the pencil icon and paste the new content.
+2. Wait about a minute, then open https://haymohsen.github.io/MakeItFit/manifest.webmanifest in a browser and check that it shows `"id": "/MakeItFit/"`.
+3. Go to pwabuilder.com → enter `https://haymohsen.github.io/MakeItFit/` → **Package for stores → Windows**. Use the same Package ID, Publisher ID and Publisher display name as the previous package and the app name exactly as reserved in Partner Center. Expand the full settings (the "Classic app version" field is hidden by default) and type **App version `1.2.0`** and **Classic app version `1.1.9`** — both higher than the first submission's packages, with the classic number below the app version. Generate and download the package.
+4. Partner Center → this app → **Update** (new submission) → **Packages** → upload both the `.msixbundle` and the `.classic.appxbundle` → Submit. Listing, price and trial stay as they are. If Partner Center reports a package "with the same full name", a version number was left at its default — regenerate with the numbers above and replace the uploaded packages.
+5. On your own PC uninstall the old copy (Settings → Apps, and `edge://apps`) before installing the updated one to test. Customers keep their data — it is stored per website, not per app identity.

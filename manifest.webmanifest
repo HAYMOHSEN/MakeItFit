@@ -1,8 +1,8 @@
 {
-  "id": "./",
+  "id": "/MakeItFit/",
   "name": "Make It Fit",
   "short_name": "Make It Fit",
-  "description": "Shrink photos and PDFs to any size limit \u2014 offline, private, and still good quality.",
+  "description": "Shrink photos and PDFs to any size limit — offline, private, and still good quality.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
